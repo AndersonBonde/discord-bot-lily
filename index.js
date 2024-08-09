@@ -36,16 +36,11 @@ for (const file of eventFiles) {
 
 client.login(process.env.TOKEN);
 
-import express from 'express';
-const app = express();
-const port = process.env.PORT || 3000;
+/*
+	Config the express server listening on port 8000 for
+	koyeb health check.
 
-app.get('/', (req, res) => {
-	res.json({
-		message: 'Hello, world!',
-	});
-});
+	Koyeb is the PaaS provider used for this bot.
+*/
 
-app.listen(port, () => {
-	console.log(`App is listening on port ${port}`);
-});
+import './config/app.js';
