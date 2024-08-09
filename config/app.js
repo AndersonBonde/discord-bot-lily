@@ -11,3 +11,11 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
 	console.log(`App is listening on port ${port}`);
 });
+
+/*
+
+const info = fetch('https://www.dnd5eapi.co/api/spells/acid-arrow')
+	.then((res) => res.json())
+	.then((res) => console.log(res));
+
+*/
