@@ -10,7 +10,11 @@ const data = new SlashCommandBuilder()
 			.setAutocomplete(true));
 
 function parseSpellName(spell) {
-	return spell.split(' ').join('-').toLowerCase();
+	return spell
+		.split(' ')
+		.join('-')
+		.toLowerCase()
+		.replace(/['"]/g, '');
 }
 
 function buildEmbed(result) {
