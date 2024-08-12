@@ -6,6 +6,7 @@ const data = new SlashCommandBuilder()
 	.addStringOption((option) =>
 		option.setName('spell-name')
 			.setDescription('The name of the spell you are looking for')
+			.setRequired(true)
 			.setAutocomplete(true));
 
 function parseSpellName(spell) {
