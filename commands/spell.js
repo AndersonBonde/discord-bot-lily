@@ -17,17 +17,17 @@ function parseSpellName(spell) {
 		.replace(/['"]/g, '');
 }
 
-function buildEmbed(result) {
-	const { name, desc, level, school, range, components, duration, concentration, casting_time } = result;
+function buildEmbed(obj) {
+	const { name, desc, level, school, range, components, duration, concentration, casting_time } = obj;
 
 	const embed = new EmbedBuilder()
 		.setColor(0x0099FF)
 		.setTitle(`${name}`)
 		.setDescription(`${desc}`);
 
-	if (result['higher_level'].length) {
+	if (obj['higher_level'].length) {
 		embed.addFields(
-			{ name: 'Higher Level', value: `${result.higher_level}` },
+			{ name: 'Higher Level', value: `${obj.higher_level}` },
 		);
 	}
 
@@ -41,6 +41,23 @@ function buildEmbed(result) {
 	);
 
 	return embed;
+}
+
+async function execute(interaction) {
+	let spell = interaction.options.getString('spell-name');
+	spell = parseSpellName(spell);
+
+	const obj = await fetch(`https://www.dnd5eapi.co/api/spells/${spell}`)
+		.then((res) => res.json());
+
+	if (obj.error) {
+		interaction.reply(`${spell} was not found`);
+	}
+	else {
+		const embed = buildEmbed(obj);
+
+		await interaction.reply({ embeds: [embed] });
+	}
 }
 
 const spells = await fillSpellAutoComplete();
@@ -62,23 +79,6 @@ async function autocomplete(interaction) {
 		filtered.map(choice => ({ name: choice, value: choice })),
 	);
 };
-
-async function execute(interaction) {
-	let spell = interaction.options.getString('spell-name');
-	spell = parseSpellName(spell);
-
-	const result = await fetch(`https://www.dnd5eapi.co/api/spells/${spell}`)
-		.then((res) => res.json());
-
-	if (result.error) {
-  	interaction.reply(`${spell} was not found`);
-	}
-	else {
-		const embed = buildEmbed(result);
-
-		await interaction.reply({ embeds: [embed] });
-	}
-}
 
 export {
 	data,
