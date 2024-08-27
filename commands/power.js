@@ -9,6 +9,14 @@ const data = new SlashCommandBuilder()
 			.setDescription('The name of the power you are looking for')
 			.setRequired(true));
 
+function parsePowerName(spell) {
+	return spell
+		.split(' ')
+		.join('-')
+		.toLowerCase()
+		.replace(/['"]/g, '');
+}
+
 function buildEmbed(obj) {
 	const { name, description, cost, system, dice_pools, duration, amalgam } = obj;
 
@@ -29,9 +37,10 @@ function buildEmbed(obj) {
 }
 
 async function execute(interaction) {
-	const power = interaction.options.getString('power-name');
+	let power = interaction.options.getString('power-name');
+	power = parsePowerName(power);
 
-	const obj = await db.getPowerByName(power);
+	const obj = await db.getPower(power);
 
 	if (obj.error || !obj) {
 		interaction.reply(`${power} was not found`);

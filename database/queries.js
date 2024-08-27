@@ -6,13 +6,13 @@ async function getAllPowers() {
 	return rows;
 };
 
-async function getPowerByName(name) {
-	const { rows } = await pool.query('SELECT * FROM power WHERE name = $1', [name]);
+async function getPower(index) {
+	const { rows } = await pool.query('SELECT * FROM power WHERE index = $1', [index]);
 
 	return rows[0];
 };
 
 export {
 	getAllPowers,
-	getPowerByName,
+	getPower,
 };
