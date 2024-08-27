@@ -7,7 +7,8 @@ const data = new SlashCommandBuilder()
 	.addStringOption((option) =>
 		option.setName('power-name')
 			.setDescription('The name of the power you are looking for')
-			.setRequired(true));
+			.setRequired(true)
+			.setAutocomplete(true));
 
 function parsePowerName(spell) {
 	return spell
@@ -42,7 +43,7 @@ async function execute(interaction) {
 
 	const obj = await db.getPower(power);
 
-	if (obj.error || !obj) {
+	if (obj.error) {
 		interaction.reply(`${power} was not found`);
 	}
 	else {
@@ -52,7 +53,23 @@ async function execute(interaction) {
 	}
 }
 
+const powers = await db.getAllPowers().then((res) => res.map((power) => power.name));
+
+async function autocomplete(interaction) {
+	const focusedValue = interaction.options.getFocused();
+
+	if (focusedValue.length < 1) return;
+
+	const choices = powers;
+	const filtered = choices.filter(choice => choice.startsWith(focusedValue));
+
+	await interaction.respond(
+		filtered.map(choice => ({ name: choice, value: choice })),
+	);
+};
+
 export {
 	data,
 	execute,
+	autocomplete,
 };

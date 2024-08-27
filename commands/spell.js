@@ -72,6 +72,9 @@ async function fillSpellAutoComplete() {
 
 async function autocomplete(interaction) {
 	const focusedValue = interaction.options.getFocused();
+
+	if (focusedValue.length < 1) return;
+
 	const choices = spells;
 	const filtered = choices.filter(choice => choice.startsWith(focusedValue));
 
