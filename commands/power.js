@@ -56,12 +56,16 @@ async function execute(interaction) {
 const powers = await db.getAllPowers().then((res) => res.map((power) => power.name));
 
 async function autocomplete(interaction) {
-	const focusedValue = interaction.options.getFocused();
+	let focusedValue = interaction.options.getFocused();
 
-	if (focusedValue.length < 1) return;
+	if (!focusedValue) return;
+
+	focusedValue = focusedValue.slice(0, 1).toUpperCase() + focusedValue.slice(1);
 
 	const choices = powers;
-	const filtered = choices.filter(choice => choice.startsWith(focusedValue));
+	const filtered = choices.filter((choice) => {
+		return choice.startsWith(focusedValue);
+	});
 
 	await interaction.respond(
 		filtered.map(choice => ({ name: choice, value: choice })),
